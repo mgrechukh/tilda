@@ -255,21 +255,26 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
 
     guint length = (guint) config_getint ("title_max_length");
 
+    gchar *shortTitle;
     if(config_getbool("title_max_length_flag") && strlen(title) > length) {
-        gchar *titleOffset = title + strlen(title) - length;
-        gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
-        gtk_label_set_text (GTK_LABEL(label), shortTitle);
-        if (active) {
-            gtk_window_set_title (GTK_WINDOW (tt->tw->window), shortTitle);
-        }
-        g_free(shortTitle);
+        shortTitle = g_strndup(title, length);
+
     } else {
-        gtk_label_set_text (GTK_LABEL(label), title);
-        if (active) {
-            gtk_window_set_title (GTK_WINDOW (tt->tw->window), title);
-        }
+        shortTitle = g_strdup(title);
     }
 
+    if (g_str_has_prefix(shortTitle, "root@")) {
+        gchar *formatted= g_strdup_printf("<span weight=\"bold\" color=\"red\">%s</span>", shortTitle);
+        gtk_label_set_markup (GTK_LABEL(label), formatted);
+        g_free(formatted);
+    } else 
+        gtk_label_set_text (GTK_LABEL(label), shortTitle);
+
+    if (active) {
+        gtk_window_set_title (GTK_WINDOW (tt->tw->window), shortTitle);
+    }
+
+    g_free(shortTitle);
     g_free (title);
 }
 

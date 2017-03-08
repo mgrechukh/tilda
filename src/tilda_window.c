@@ -1107,7 +1107,7 @@ gint tilda_window_add_tab (tilda_window *tw)
 
     /* We should show the tabs if there are more than one tab in the notebook,
      * and tab position is not set to hidden */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 &&
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 0 &&
             config_getint("tab_pos") != NB_HIDDEN)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
 
@@ -1139,8 +1139,6 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), tab_index);
 
     /* We should hide the tabs if there is only one tab left */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
-        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
 
     /* With no pages left, either leave the program or create a new
      * terminal */
